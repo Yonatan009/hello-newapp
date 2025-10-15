@@ -16,10 +16,15 @@ podTemplate(containers: [
           }
         } // end chackout
 
-        stage('Hello') {
-            container('docker') {
-              echo "Building docker image..."
-              sh "echo docker push $appimage"
+        stage('build with kanikp') {
+            container('kaniko') {
+              sh '''
+              / kaniko/executor \
+              --context $(WORKSPACE) \ 
+              --dockerfile /$(WORKSAPCE)/Dockerfile \
+              --destination docker.io/yonatan009/hello-newapp:${BUILD_NUMBER} \
+              --cleanup
+              '''
             }
         } //end hello
     }
