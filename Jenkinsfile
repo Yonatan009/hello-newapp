@@ -1,5 +1,5 @@
 def appname = "hello-newapp"
-def repo = "elevy99927"  // Replace with your DockerHub username
+def repo = "yonatan009"  // Replace with your DockerHub username
 def appimage = "${repo}/${appname}"
 def apptag = "${env.BUILD_NUMBER}"
 
@@ -16,12 +16,17 @@ podTemplate(containers: [
           }
         } // end chackout
 
-        stage('Hello') {
-            container('docker') {
-              echo "Building docker image..."
-              sh "echo docker push $appimage"
-            }
-        } //end hello
+        stage('Build with Kaniko') {
+    container('docker') {
+        sh '''
+        /kaniko/executor \
+          --context ${WORKSPACE}/ \
+          --dockerfile ${WORKSPACE}/Dockerfile \
+          --destination=docker.io/${repo}/${appname}:${apptag} \
+          --cleanup
+        '''
+    }
+  }
     }
 }
 
