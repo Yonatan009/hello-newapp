@@ -16,17 +16,17 @@ podTemplate(containers: [
           }
         } // end chackout
 
-        stage('build with kanikp') {
-            container('kaniko') {
-              sh '''
-              / kaniko/executor \
-              --context $(WORKSPACE) \ 
-              --dockerfile /$(WORKSAPCE)/Dockerfile \
-              --destination docker.io/yonatan009/hello-newapp:${BUILD_NUMBER} \
-              --cleanup
-              '''
+        stage('build with kaniko') {
+            container('docker') {
+                sh '''
+                /kaniko/executor \
+                  --context ${WORKSPACE}/ \
+                  --dockerfile ${WORKSPACE}/Dockerfile \
+                  --destination docker.io/yonatan009/hello-newapp:${BUILD_NUMBER} \
+                  --cleanup
+                '''
             }
-        } //end hello
     }
 }
+  }
 
